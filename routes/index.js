@@ -26,7 +26,7 @@ module.exports = function(app, config, events, db) {
         message: 'Event was not recognized'
       });
     }
-    events[post.event](post.data, function(data) {
+    events[post.event](post.data, db, function(data) {
       res.json(data);
     });
   });

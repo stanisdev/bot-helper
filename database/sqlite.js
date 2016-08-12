@@ -4,9 +4,13 @@ var sqlite3 = require('sqlite3').verbose();
 module.exports = function(config) {
 
   var connect =  function(cb) {
+
     var db = new sqlite3.Database(config.db_name);
     db.serialize(function() {
-      cb(db);
+      db.run("CREATE TABLE IF NOT EXISTS user_list (user_id INTEGER, event_id INTEGER)", function(err) {
+        if (err) {}
+        cb(db);
+      });
     });
   }
 
