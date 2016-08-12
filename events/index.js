@@ -36,7 +36,7 @@ module.exports = function(config) {
             },
             body: {
               'type': 'text/plain',
-              'content': 'Привет ' + body.data.name + ', я твой бот помощник :)'
+              'content': 'Привет ' + body.data.name + ', я твой бот помощник. В любой непонятной ситуации обращайся ко мне :)'
             },
             json: true
           };
