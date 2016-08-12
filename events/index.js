@@ -3,6 +3,7 @@ var request = require('request');
 module.exports = function(config) {
 
   var events = {};
+  var helpers = require('./../helpers')(config);
 
   /**
    * User/follow
@@ -12,7 +13,7 @@ module.exports = function(config) {
 
     // Check existing user
     db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ? AND event_id = ?', [userId, 1], function(userExists) {
-
+      return;
       var postData = {
         url: config.api_url + '/chats/create',
         headers: {
@@ -58,8 +59,18 @@ module.exports = function(config) {
   */
   events['message/new'] = function(data, cb) {
     console.log('========================================');
-    console.log(data);
-    cb({});
+    console.log(data.content);
+    console.log(data.chat_id);
+    console.log('========================================');
+    // helpers.request({
+    //   url: '',
+    //   body: {
+    //     'type': 'text/plain',
+    //     'content': 'Hello 2'
+    //   }
+    // }, function() {
+    //   cb({success: true});
+    // })
   };
 
   /**
