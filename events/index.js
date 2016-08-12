@@ -34,9 +34,8 @@ module.exports = function(config) {
           json: true
         };
         request.post(chatData, function() {
-          console.log('=======================');
-          console.log(arguments);
-          cd({ success: true });
+          console.log('****DONE*****');
+          cb({ success: true });
         });
       } else {
         cb({ success: false });
