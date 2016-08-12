@@ -31,13 +31,15 @@ module.exports = function(app, config, events, db) {
     });
   });
 
+  /*
   app.get('/s', function(req, res) {
-    // db.insert('INSERT INTO user_list VALUES (?, ?)', ['778', 1003], function(data) {
-    //   console.log(data);
-    // });
+    db.insert('INSERT INTO user_list VALUES (?, ?)', ['778', 1003], function(data) {
+      console.log(data);
+    });
     db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ?', 778, function(data) {
       console.log(data);
     });
     res.json({});
   });
+  */
 };

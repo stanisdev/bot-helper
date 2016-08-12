@@ -12,10 +12,6 @@ module.exports = function(config) {
 
     // Check existing user
     db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ? AND event_id = ?', [userId, 1], function(userExists) {
-      
-      console.log('**********************');
-      console.log(userExists);
-      console.log('**********************');
 
       var postData = {
         url: config.api_url + '/chats/create',
@@ -61,7 +57,9 @@ module.exports = function(config) {
   * Message/new
   */
   events['message/new'] = function(data, cb) {
-
+    console.log('========================================');
+    console.log(data);
+    cb({});
   };
 
   /**
