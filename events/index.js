@@ -30,7 +30,8 @@ module.exports = function(config) {
           body: {
             'type': 'text/plain',
             'content': 'Привет, я твой бот помощник :)'
-          }
+          },
+          json: true
         };
         request.post(chatData, function() {
           console.log('=======================');
