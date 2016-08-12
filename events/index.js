@@ -58,19 +58,17 @@ module.exports = function(config) {
   * Message/new
   */
   events['message/new'] = function(data, cb) {
-    console.log('========================================');
-    console.log(data.content);
-    console.log(data.chat_id);
-    console.log('========================================');
-    // helpers.request({
-    //   url: '',
-    //   body: {
-    //     'type': 'text/plain',
-    //     'content': 'Hello 2'
-    //   }
-    // }, function() {
-    //   cb({success: true});
-    // })
+    // data.chat_id
+    // data.content
+    helpers.request({
+      url: config.api_url + '/chats/' + data.chat_id + '/write',
+      body: {
+        'type': 'text/plain',
+        'content': 'Hello 2'
+      }
+    }, function() {
+      cb({success: true});
+    })
   };
 
   /**
