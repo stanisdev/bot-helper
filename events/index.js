@@ -68,10 +68,7 @@ module.exports = function(config) {
           'content': element
         }
       }, function(error, response, body) {
-        console.log('===================');
-        console.log(arguments);
-        console.log('===================');
-        callback(null);
+        setTimeout(callback, 150);
       })
     }, function(err, result) {
       cb({success: true});
