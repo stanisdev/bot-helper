@@ -11,7 +11,7 @@ module.exports = function(config) {
     var userId = data.id;
 
     // Check existing user
-    db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ?', [userId, 1], function(userExists) {
+    db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ? AND event_id = ?', [userId, 1], function(userExists) {
       console.log('=======================');
       console.log(userExists);
 
