@@ -20,7 +20,9 @@ module.exports = function(config) {
       },
       json: true
     };
-    request.post(postData, function(response) {
+    request.post(postData, function(err, httpResponse, body) {
+      
+      console.log(arguments);
       if (response.success) {
         var chatData = {
           url: config.api_url + '/chats/' + response.data.id + '/write',
