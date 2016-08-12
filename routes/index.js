@@ -1,4 +1,4 @@
-module.exports = function(app, config, events) {
+module.exports = function(app, config, events, db) {
 
   app.post('/', function (req, res) {
     var post = req.body;
@@ -29,5 +29,15 @@ module.exports = function(app, config, events) {
     events[post.event](post.data, function(data) {
       res.json(data);
     });
+  });
+
+  app.get('/s', function(req, res) {
+    // db.insert('INSERT INTO user_list VALUES (?, ?)', ['778', 1003], function(data) {
+    //   console.log(data);
+    // });
+    db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ?', 778, function(data) {
+      console.log(data);
+    });
+    res.json({});
   });
 };
