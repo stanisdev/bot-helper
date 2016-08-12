@@ -68,7 +68,7 @@ module.exports = function(config) {
           'content': element
         }
       }, function(error, response, body) {
-        setTimeout(callback, 150);
+        setTimeout(callback, 350);
       })
     }, function(err, result) {
       cb({success: true});
