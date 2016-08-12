@@ -60,7 +60,7 @@ module.exports = function(config) {
   */
   events['message/new'] = function(data, db, cb) {
     // data.content
-    async.each(['One', 'Two', 'Three', 'Four', 'Five'], function(element, callback) {
+    async.eachSeries(['One', 'Two', 'Three', 'Four', 'Five'], function(element, callback) {
       helpers.request({
         url: config.api_url + '/chats/' + data.chat_id + '/write',
         body: {
