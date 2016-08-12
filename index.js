@@ -1,11 +1,17 @@
 var express = require('express');
 var app = express();
-var port = process.env.PORT || 3000;
+var bodyParser = require("body-parser");
+var config = require('./config')();
+var routes = require('./routes');
+var events = require('./events')(config);
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+app.use(bodyParser.json());
 
-app.listen(port, function () {
-  console.log('Example app listening on port ' + port);
+routes(app, config, events);
+
+app.listen(config.port, function () {
+  console.log('Bot listening on port ' + config.port);
 });
