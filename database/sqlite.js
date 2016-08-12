@@ -36,10 +36,26 @@ module.exports = function(config) {
     },
     select: function(sql, values, cb) {
       prepare(sql, values, function(err, stmt) {
-        stmt.each(function(err, data) {
-          cb(data);
+
+        var resolves = [];
+        var p1 = new Promise(function(resolve, reject) {
+          resolves.push(resolve);
         });
-      })
+        var p2 = new Promise(function(resolve, reject) {
+          resolves.push(resolve);
+        });
+        stmt.each(function(err, records) { // Only if there are some data
+          resolves[0](records);
+        }, function(err, rows) { // Invoke anyway
+          if (rows == 0) {
+            resolves[0](null);
+          }
+          resolves[1](rows);
+        });
+        Promise.all([p1, p2]).then(function(data) {
+          cb(data[0]);
+        });
+      });
     }
   }
 };
