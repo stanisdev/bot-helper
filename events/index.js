@@ -67,7 +67,10 @@ module.exports = function(config) {
           'type': 'text/plain',
           'content': element
         }
-      }, function() {
+      }, function(error, response, body) {
+        console.log('===================');
+        console.log(arguments);
+        console.log('===================');
         callback(null);
       })
     }, function(err, result) {
