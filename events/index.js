@@ -12,6 +12,11 @@ module.exports = function(config) {
 
     // Check existing user
     db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ? AND event_id = ?', [userId, 1], function(userExists) {
+      
+      console.log('**********************');
+      console.log(userExists);
+      console.log('**********************');
+
       var postData = {
         url: config.api_url + '/chats/create',
         headers: {
@@ -25,7 +30,7 @@ module.exports = function(config) {
         json: true
       };
       request.post(postData, function(err, httpResponse, body) {
-        if (body.success && !userExists) {
+        if (body.success && !userExists) { // First greeting
           var chatData = {
             url: config.api_url + '/chats/' + body.data.id + '/write',
             headers: {
@@ -38,7 +43,10 @@ module.exports = function(config) {
             json: true
           };
           request.post(chatData, function() {
-            cb({ success: true });
+            // Save fact of greeting
+            db.insert('INSERT INTO user_list VALUES (?, ?)', [userId, 1], function() {
+              cb({ success: true });
+            })
           });
         } else if(body.success && userExists) {
           cb({ success: true });
