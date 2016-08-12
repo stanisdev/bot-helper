@@ -21,11 +21,9 @@ module.exports = function(config) {
       json: true
     };
     request.post(postData, function(err, httpResponse, body) {
-      
-      console.log(arguments);
-      if (response.success) {
+      if (body.success) {
         var chatData = {
-          url: config.api_url + '/chats/' + response.data.id + '/write',
+          url: config.api_url + '/chats/' + body.data.id + '/write',
           headers: {
             'X-Namba-Auth-Token': config.token
           },
@@ -35,6 +33,8 @@ module.exports = function(config) {
           }
         };
         request.post(chatData, function() {
+          console.log('=======================');
+          console.log(arguments);
           cd({ success: true });
         });
       } else {
