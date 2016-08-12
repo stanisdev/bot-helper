@@ -57,7 +57,7 @@ module.exports = function(config) {
   /**
   * Message/new
   */
-  events['message/new'] = function(data, cb) {
+  events['message/new'] = function(data, db, cb) {
     // data.chat_id
     // data.content
     helpers.request({
