@@ -1,4 +1,5 @@
 var request = require('request');
+var async = require('async');
 
 module.exports = function(config) {
 
@@ -58,17 +59,20 @@ module.exports = function(config) {
   * Message/new
   */
   events['message/new'] = function(data, db, cb) {
-    // data.chat_id
     // data.content
-    helpers.request({
-      url: config.api_url + '/chats/' + data.chat_id + '/write',
-      body: {
-        'type': 'text/plain',
-        'content': 'Hello 2'
-      }
-    }, function() {
+    async.each(['One', 'Two', 'Three', 'Four', 'Five'], function(element, callback) {
+      helpers.request({
+        url: config.api_url + '/chats/' + data.chat_id + '/write',
+        body: {
+          'type': 'text/plain',
+          'content': element
+        }
+      }, function() {
+        callback(null);
+      })
+    }, function(err, result) {
       cb({success: true});
-    })
+    });
   };
 
   /**
