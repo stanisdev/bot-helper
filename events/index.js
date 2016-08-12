@@ -8,6 +8,8 @@ module.exports = function(config) {
    * User/follow
    */
   events['user/follow'] = function(data, cb) {
+    console.log('-----------------------');
+    console.log(data);
     var postData = {
       url: config.api_url + '/chats/create',
       headers: {
