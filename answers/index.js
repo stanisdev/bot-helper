@@ -7,8 +7,8 @@ module.exports = function(statement, db, userId, callback) {
       'Увы, друг, но ты не задал вопрос, на который я бы смог тебе ответить'
     ],
     'not recognized': [
-      'К сожалению, _NAME_ я не могу распознать твое обращение ко мне :(',
-      'Друг дорогой, любезный _NAME_, попробуй ввести сформулировать вопрос'
+      'Увы _NAME_, но я не могу распознать твое обращение ко мне :(',
+      'Дорогой мой _NAME_, попробуй сформулировать вопрос иначе'
     ]
   };
 
@@ -31,9 +31,9 @@ module.exports = function(statement, db, userId, callback) {
       if (number <= answer.length) {break;}
     }
     (function(result) {
-      if (result.search('_NAME_') > -1) {
+      if (result.search(' _NAME_,') > -1) {
         db.select('SELECT first_name FROM user_info WHERE user_id = ?', [userId], function(userInfo) {
-          callback(result.replace('_NAME_', (userInfo instanceof Object && userInfo.hasOwnProperty('first_name') ? userInfo.first_name : 'Приятель') ));
+          callback(result.replace(' _NAME_', (userInfo instanceof Object && userInfo.hasOwnProperty('first_name') ? ' ' +userInfo.first_name : '') ));
         });
       } else { callback(result); }
     })(answer[(number === 0 ? 1 : number) - 1])
