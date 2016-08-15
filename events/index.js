@@ -57,11 +57,8 @@ module.exports = function(config) {
   * Message/new
   */
   events['message/new'] = function(data, db, cb) {
-    console.log('********************************');
-    console.log(data);
-    console.log('********************************');
     var statement = data.content;
-    require('./../answers')(statement.trim().toLowerCase(), db, 27, function(answer) {
+    require('./../answers')(statement.trim().toLowerCase(), db, data.sender_id, function(answer) {
       async.eachSeries(Array.isArray(answer) ? answer : [answer], function(element, callback) { // Asyncroniously response answer
         helpers.request({
           url: config.api_url + '/chats/' + data.chat_id + '/write',
