@@ -57,6 +57,9 @@ module.exports = function(config) {
   * Message/new
   */
   events['message/new'] = function(data, db, cb) {
+    console.log('********************************');
+    console.log(data);
+    console.log('********************************');
     var statement = data.content;
     require('./../answers')(statement.trim().toLowerCase(), db, 27, function(answer) {
       async.eachSeries(Array.isArray(answer) ? answer : [answer], function(element, callback) { // Asyncroniously response answer
