@@ -11,15 +11,17 @@ module.exports = function(statement, db, userId, callback) {
       'Дорогой мой _NAME_, попробуй сформулировать вопрос иначе'
     ]
   };
-
-  var answers = {
-    'кто ты' : [
+  var base = [{
+    questions: [
+      'кто ты', 'ты кто', 'расскажи о себе', 'who are you'
+    ],
+    answers: [
       'Я твой персональный друг-помощник, который выручит тебя в любой сложной для тебя ситуации :)',
       'Твой лучший приятель)',
-      'Тот, кто выручит тебя в трудную минуту...',
-      'Гид и путеводитель по Kamp'
+      'Тот, кто выручит тебя в трудную минуту',
+      'Я гид и путеводитель по Kamp'
     ]
-  };
+  }];
 
   var getAnswer = function(answer) {
     if (answer.length === 1) {
@@ -44,9 +46,11 @@ module.exports = function(statement, db, userId, callback) {
   }
 
   // Find most suitable answer
-  for (var key in answers) {
-    if ((new RegExp('^.?'+key+'.?$', 'i')).test(statement)) {
-      return getAnswer(answers[key]);
+  for (var A = 0; A < base.length; A++) {
+    for (var B = 0; B < base[A].questions.length; B++) {
+      if ((new RegExp('^.?' + base[A].questions[B] + '.?$', 'i')).test(statement)) {
+        return getAnswer(base[A].answers);
+      }
     }
   }
   getAnswer(exceptions['not recognized']);
