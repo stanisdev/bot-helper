@@ -21,9 +21,30 @@ module.exports = function(statement, db, userId, callback) {
       'Тот, кто выручит тебя в трудную минуту',
       'Я гид и путеводитель по Kamp'
     ]
+  }, {
+    questions: [
+      'help', 'помоги', 'помощь', 'где я', 'что это', 'ау', '!!!'
+    ],
+    answers: function() {
+      var firstMsg = [
+        'Начнем с того, что ты находишься в системе Kamp',
+        'Итак, отвечу тебе на главный вопрос, что такое Kamp'
+      ];
+      var secondMsg = [
+        'Kamp - это удобное средство общения с друзьями, с ботами при помощи обмена сообщениями через чаты либо через группы',
+        'Kamp - возможность пообщаться с друзьями, открыть свою группу, воспользоваться имеющимися приложениями и многое другое'
+      ];
+      return [
+        firstMsg[ getRand(firstMsg.length-1) ],
+        secondMsg[ getRand(secondMsg.length-1) ]
+      ];
+    }
   }];
 
   var getAnswer = function(answer) {
+    if (typeof answer == 'function') {
+      return callback(answer());
+    }
     if (answer.length === 1) {
       return callback(answer[0]);
     }
@@ -54,4 +75,13 @@ module.exports = function(statement, db, userId, callback) {
     }
   }
   getAnswer(exceptions['not recognized']);
+
+  function getRand(max) {
+  	var number;
+  	while (true) {
+        number = +Math.random().toString().substr(2,1);
+        if (number <= max) {break;}
+      }
+    return number;
+  }
 };
