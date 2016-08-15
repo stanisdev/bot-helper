@@ -38,9 +38,6 @@ module.exports = function(config) {
           }, function(err, result) { // Save fact of greeting
             db.insert('INSERT INTO user_list VALUES (?, ?)', [userId, 1], function() {
               // Save name of user
-              console.log('=========================');
-              console.log(body.data.name);
-              console.log('=========================');
               db.insert('INSERT INTO user_info VALUES (?, ?)', [userId, body.data.name], function() {
                 cb({ success: true });
               });

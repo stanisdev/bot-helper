@@ -33,6 +33,9 @@ module.exports = function(statement, db, userId, callback) {
     (function(result) {
       if (result.search(' _NAME_,') > -1) {
         db.select('SELECT first_name FROM user_info WHERE user_id = ?', [userId], function(userInfo) {
+          console.log('********************************');
+          console.log(userInfo);
+          console.log('********************************');
           callback(result.replace(' _NAME_', (userInfo instanceof Object && userInfo.hasOwnProperty('first_name') ? ' ' +userInfo.first_name : '') ));
         });
       } else { callback(result); }
