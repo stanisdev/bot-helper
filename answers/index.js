@@ -44,7 +44,7 @@ module.exports = function(statement, db, userId, callback) {
       'привет', 'салам', 'салам алейкум', 'hello', 'hey', 'хай', 'добрый день'
     ],
     answers: [
-      'Привет, _NAME_'
+      'Привет, _NAME_,', 'Приветствую, _NAME_,'
     ]
   }];
 
