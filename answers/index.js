@@ -39,6 +39,13 @@ module.exports = function(statement, db, userId, callback) {
         secondMsg[ getRand(secondMsg.length-1) ]
       ];
     }
+  }, {
+    questions: [
+      'привет', 'салам', 'салам алейкум', 'hello', 'hey', 'хай', 'добрый день'
+    ],
+    answers: [
+      'Привет, _NAME_'
+    ]
   }];
 
   var getAnswer = function(answer) {
