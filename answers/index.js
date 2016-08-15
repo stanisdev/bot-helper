@@ -43,14 +43,24 @@ module.exports = function(statement, db, userId, callback) {
     questions: [
       'привет', 'салам', 'салам алейкум', 'hello', 'hey', 'хай', 'добрый день'
     ],
-    answers: [
-      'Привет, _NAME_,', 'Приветствую, _NAME_,'
-    ]
+    answers: {
+      invoke: function functionName(callback) {
+        var greetings = ['Привет, _NAME_', 'Приветствую, _NAME_', 'Хай, _NAME_', 'Салют, _NAME_']
+
+        findName(userId, function(userInfo) {
+          var userInfo = (userInfo instanceof Object && userInfo.hasOwnProperty('first_name') ? ', ' +userInfo.first_name : '');
+          callback(greetings[ getRand(greetings.length-1) ].replace(', _NAME_', userInfo));
+        });
+      }
+    }
   }];
 
   var getAnswer = function(answer) {
     if (typeof answer == 'function') {
       return callback(answer());
+    }
+    if (!Array.isArray() && answer instanceof Object && answer.hasOwnProperty('invoke')) {
+      return answer.invoke(callback);
     }
     if (answer.length === 1) {
       return callback(answer[0]);
@@ -62,8 +72,9 @@ module.exports = function(statement, db, userId, callback) {
     }
     (function(result) {
       if (result.search(' _NAME_,') > -1) {
-        db.select('SELECT first_name FROM user_info WHERE user_id = ?', [userId], function(userInfo) {
-          callback(result.replace(' _NAME_', (userInfo instanceof Object && userInfo.hasOwnProperty('first_name') ? ' ' +userInfo.first_name : '') ));
+        findName(userId, function(userInfo) {
+          var userInfo = (userInfo instanceof Object && userInfo.hasOwnProperty('first_name') ? ' ' +userInfo.first_name : '');
+          callback(result.replace(' _NAME_', userInfo));
         });
       } else { callback(result); }
     })(answer[(number === 0 ? 1 : number) - 1])
@@ -90,5 +101,11 @@ module.exports = function(statement, db, userId, callback) {
         if (number <= max) {break;}
       }
     return number;
+  }
+
+  function findName(userId, callback) {
+    db.select('SELECT first_name FROM user_info WHERE user_id = ?', [userId], function(userInfo) {
+      callback(userInfo);
+    });
   }
 };
