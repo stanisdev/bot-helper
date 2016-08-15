@@ -12,7 +12,7 @@ module.exports = function(app, config, events, db) {
   });
 
   app.post('/chats/:id/write', function(req, res) {
-    console.log('================');
+    console.log('==========================');
     console.log(req.body);
     return res.json({
       success: true
