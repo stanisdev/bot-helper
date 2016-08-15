@@ -14,39 +14,37 @@ module.exports = function(config) {
 
     // Check existing user
     db.select('SELECT user_id, event_id FROM user_list WHERE user_id = ? AND event_id = ?', [userId, 1], function(userExists) {
-      return;
-      var postData = {
+      helpers.request({
         url: config.api_url + '/chats/create',
-        headers: {
-          'X-Namba-Auth-Token': config.token
-        },
         body: {
           'name': config.bot_name,
           'image': '',
           'members': [userId]
-        },
-        json: true
-      };
-      request.post(postData, function(err, httpResponse, body) {
+        }
+      }, function(error, httpResponse, body) {
         if (body.success && !userExists) { // First greeting
-          var chatData = {
-            url: config.api_url + '/chats/' + body.data.id + '/write',
-            headers: {
-              'X-Namba-Auth-Token': config.token
-            },
-            body: {
-              'type': 'text/plain',
-              'content': 'Привет ' + body.data.name + ', я твой бот помощник. В любой непонятной ситуации обращайся ко мне :)'
-            },
-            json: true
-          };
-          request.post(chatData, function() {
-            // Save fact of greeting
+
+          async.eachSeries(['Привет ' + body.data.name + ', я твой бот помощник.', 'В любой непонятной ситуации обращайся ко мне :)'], function(element, callback) {
+            helpers.request({
+              url: config.api_url + '/chats/' + body.data.id + '/write',
+              body: {
+                'type': 'text/plain',
+                'content': element
+              }
+            }, function(error, response, body) {
+              if (error) {console.log(error);}
+              callback(null);
+            });
+          }, function(err, result) { // Save fact of greeting
             db.insert('INSERT INTO user_list VALUES (?, ?)', [userId, 1], function() {
-              cb({ success: true });
-            })
+              // Save name of user
+              db.insert('INSERT INTO user_info VALUES (?, ?)', [userId, body.data.name], function() {
+                cb({ success: true });
+              });
+            });
           });
-        } else if(body.success && userExists) {
+
+        } else if(body.success && userExists) { // Reinclusion bot
           cb({ success: true });
         } else {
           cb({ success: false });
@@ -59,20 +57,22 @@ module.exports = function(config) {
   * Message/new
   */
   events['message/new'] = function(data, db, cb) {
-    // data.content
-    async.eachSeries(['One', 'Two', 'Three', 'Four', 'Five'], function(element, callback) {
-      helpers.request({
-        url: config.api_url + '/chats/' + data.chat_id + '/write',
-        body: {
-          'type': 'text/plain',
-          'content': element
-        }
-      }, function(error, response, body) {
-        console.log(body.data.content);
-        callback(null);
-      })
-    }, function(err, result) {
-      cb({success: true});
+    var statement = data.content;
+    require('./../answers')(statement.trim().toLowerCase(), db, 27, function(answer) {
+      async.eachSeries(Array.isArray(answer) ? answer : [answer], function(element, callback) { // Asyncroniously response answer
+        helpers.request({
+          url: config.api_url + '/chats/' + data.chat_id + '/write',
+          body: {
+            'type': 'text/plain',
+            'content': element
+          }
+        }, function(error, response, body) {
+          if (error) {console.log(error);}
+          callback(null);
+        });
+      }, function(err, result) {
+        cb({success: true});
+      });
     });
   };
 

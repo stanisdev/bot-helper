@@ -1,28 +1,34 @@
 var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
 
-module.exports = function(config) {
+module.exports = function(config, moduleCallback) {
 
-  var connect =  function(cb) {
+  var instance = {db: null};
 
+  (function(config) {
     var db = new sqlite3.Database(config.db_name);
     db.serialize(function() {
-      db.run("CREATE TABLE IF NOT EXISTS user_list (user_id INTEGER, event_id INTEGER)", function(err) {
-        if (err) {}
-        cb(db);
+      db.run('CREATE TABLE IF NOT EXISTS user_list (user_id INTEGER, event_id INTEGER)', function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          db.run('CREATE TABLE IF NOT EXISTS user_info (user_id INTEGER, first_name TEXT)', function(err) {
+            if (err) {console.log(err);}
+            instance.db = db;
+            moduleCallback();
+          });
+        }
       });
     });
-  }
+  })(config);
 
   var prepare = function(sql, values, cb) {
-    connect(function(db) {
-      var stmt = db.prepare(sql, function(err) {
-        if (err) {
-          cb(err);
-        }
-        stmt.run.apply(stmt, Array.isArray(values) ? values : [values]);
-        cb(null, stmt);
-      });
+    var stmt = instance.db.prepare(sql, function(err) {
+      if (err) {
+        cb(err);
+      }
+      stmt.run.apply(stmt, Array.isArray(values) ? values : [values]);
+      cb(null, stmt);
     });
   };
 
@@ -36,7 +42,9 @@ module.exports = function(config) {
     },
     select: function(sql, values, cb) {
       prepare(sql, values, function(err, stmt) {
-
+        if (err) {
+          console.error(err);
+        }
         var resolves = [];
         var p1 = new Promise(function(resolve, reject) {
           resolves.push(resolve);
@@ -56,6 +64,9 @@ module.exports = function(config) {
           cb(data[0]);
         });
       });
+    },
+    instance: function() {
+      return instance.db;
     }
-  }
+  };
 };
