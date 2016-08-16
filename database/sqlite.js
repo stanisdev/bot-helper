@@ -1,5 +1,6 @@
 var fs = require('fs');
 var sqlite3 = require('sqlite3').verbose();
+var async = require('async');
 
 module.exports = function(config, moduleCallback) {
 
@@ -7,16 +8,22 @@ module.exports = function(config, moduleCallback) {
 
   (function(config) {
     var db = new sqlite3.Database(config.db_name);
+    var queries = [
+      'CREATE TABLE IF NOT EXISTS user_list (user_id INTEGER, event_id INTEGER)',
+      'CREATE TABLE IF NOT EXISTS user_info (user_id INTEGER, first_name TEXT)',
+      'CREATE TABLE IF NOT EXISTS incorrect_statements (user_id INTEGER, attempts INTEGER)',
+      'CREATE TABLE IF NOT EXISTS point_out_interests_showed (user_id INTEGER, error_statements_counter INTEGER, showed INTEGER)',
+      'CREATE TABLE IF NOT EXISTS interests (user_id INTEGER, interests_list TEXT)'
+    ];
     db.serialize(function() {
-      db.run('CREATE TABLE IF NOT EXISTS user_list (user_id INTEGER, event_id INTEGER)', function(err) {
-        if (err) {console.log(err);}
-        db.run('CREATE TABLE IF NOT EXISTS user_info (user_id INTEGER, first_name TEXT)', function(err) {
+      async.each(queries, function(query, callback) {
+        db.run(query, function(err) {
           if (err) {console.log(err);}
-          db.run('CREATE TABLE IF NOT EXISTS incorrect_statements (user_id INTEGER, attempts INTEGER)', function(err) {
-            instance.db = db;
-            moduleCallback();
-          });
+          callback();
         });
+      }, function() {
+        instance.db = db;
+        moduleCallback();
       });
     });
   })(config);

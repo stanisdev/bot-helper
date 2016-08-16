@@ -1,8 +1,18 @@
-module.exports = function(db, userId, getRand, callback) {
+module.exports = function(db, userId, getRand, cb) {
   db.select('SELECT attempts FROM incorrect_statements WHERE user_id = ?', [userId], function(attempts) {
     /**
      * First save
      */
+    var callback = function(data) {
+      require('./interests')(db, userId, function(interests) {
+        if (data && interests) {
+          data = [data].concat(interests);
+        } else if (interests) {
+          data = interests;
+        }
+        cb(data);
+      });
+    };
     if (!(attempts instanceof Object)) {
       db.insert('INSERT INTO incorrect_statements VALUES (?, 1)', [userId], function(error) {
         if (!error) {console.log(error);}

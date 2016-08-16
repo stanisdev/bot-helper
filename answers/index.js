@@ -7,7 +7,7 @@ module.exports = function(statement, db, userId, callback) {
       'Увы, друг, но ты не задал вопрос, на который я бы смог тебе ответить'
     ],
     'not recognized': [
-      'Увы _NAME_, но я не могу распознать твое обращение ко мне :(',
+      'Ой, я не могу распознать твое обращение ко мне :(',
       'Попробуй сформулировать вопрос иначе',
       'Вынужден тебя попросить адресовать свой вопрос несколько другим образом :)',
       'Я рад что ты продолжаешь общаться со мной :), но эту фразу увы распознать не могу',
@@ -126,10 +126,13 @@ module.exports = function(statement, db, userId, callback) {
   // If we are here then statement was not recognized. Save this fact and after 2 attempt to send hint
   require('./hint')(db, userId, getRand, function(hints) {
     if (hints) {
-      callback([
-        exceptions['not recognized'][ getRand( exceptions['not recognized'].length-1 ) ],
-        hints
-      ]);
+      var res = [exceptions['not recognized'][ getRand( exceptions['not recognized'].length-1 ) ]];
+      if (Array.isArray(hints)) {
+        res.concat(hints);
+      } else {
+        res.push(hints);
+      }
+      callback(res);
     } else {getAnswer(exceptions['not recognized']);}
   });
 
