@@ -9,7 +9,7 @@ module.exports = function(db, userId, getRand, callback) {
         callback();
       });
     } else {
-      if (+attempts.attempts >= 3) { // Show hints
+      if (+attempts.attempts >= 2) { // Show hints
         db.insert('DELETE FROM incorrect_statements WHERE user_id = ?', [userId], function(error) {
           if (error) {console.log(error);}
           callback(getHint());
