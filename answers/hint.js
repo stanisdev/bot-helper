@@ -35,7 +35,8 @@ module.exports = function(db, userId, getRand, callback) {
       'бот, помощь, чат ...',
       'группа, приложения ...',
       'help', 'добрый день', 'kamp',
-      'привет'
+      'привет',
+      'кто ты'
     ];
     var result = '';
   	[a, b, c].forEach(elem => {
