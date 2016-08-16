@@ -41,6 +41,6 @@ var db = require('./database/sqlite')(config, function() {
   .forEach(file => require('./routes/' + file)(app, config, events, db, passport));
 
   app.listen(config.port, function () {
-    console.log('Bot listening on port = ' + config.port);
+    console.log('Bot listening on port ' + config.port);
   });
 });
