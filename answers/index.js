@@ -128,7 +128,7 @@ module.exports = function(statement, db, userId, callback) {
     if (hints) {
       var res = [exceptions['not recognized'][ getRand( exceptions['not recognized'].length-1 ) ]];
       if (Array.isArray(hints)) {
-        res.concat(hints);
+        res = res.concat(hints);
       } else {
         res.push(hints);
       }
