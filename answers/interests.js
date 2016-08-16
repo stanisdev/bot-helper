@@ -16,7 +16,7 @@ module.exports = function(db, userId, callback) {
             'Зачем это нужно?:) Так я могу посоветовать тебе то, что ты больше предпочитаешь',
             'Напиши "_интересы_:" и дальше перечисли их через запятую'
           ];
-          callback(text);
+          callback(); // Доделать "text"
         })
       } else {
         db.insert('UPDATE point_out_interests_showed SET error_statements_counter = error_statements_counter + 1 WHERE user_id = ?', [userId], function(err) {
