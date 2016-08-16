@@ -123,7 +123,15 @@ module.exports = function(statement, db, userId, callback) {
       }
     }
   }
-  getAnswer(exceptions['not recognized']);
+  // If we are here then statement was not recognized. Save this fact and after 2 attempt to send hint
+  require('./hint')(db, userId, getRand, function(hints) {
+    if (hints) {
+      callback([
+        exceptions['not recognized'][ getRand( exceptions['not recognized'].length-1 ) ],
+        hints
+      ]);
+    } else {getAnswer(exceptions['not recognized']);}
+  });
 
   function getRand(max) {
   	var number;

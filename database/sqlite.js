@@ -9,15 +9,14 @@ module.exports = function(config, moduleCallback) {
     var db = new sqlite3.Database(config.db_name);
     db.serialize(function() {
       db.run('CREATE TABLE IF NOT EXISTS user_list (user_id INTEGER, event_id INTEGER)', function(err) {
-        if (err) {
-          console.log(err);
-        } else {
-          db.run('CREATE TABLE IF NOT EXISTS user_info (user_id INTEGER, first_name TEXT)', function(err) {
-            if (err) {console.log(err);}
+        if (err) {console.log(err);}
+        db.run('CREATE TABLE IF NOT EXISTS user_info (user_id INTEGER, first_name TEXT)', function(err) {
+          if (err) {console.log(err);}
+          db.run('CREATE TABLE IF NOT EXISTS incorrect_statements (user_id INTEGER, attempts INTEGER)', function(err) {
             instance.db = db;
             moduleCallback();
           });
-        }
+        });
       });
     });
   })(config);
