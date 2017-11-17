@@ -30,4 +30,12 @@ module.exports = function(app, config, events, db) {
       res.json(data);
     });
   });
+
+  app.get('/', function(req, res) {
+    res.json({
+      success: true,
+      message: 'This is bot helper. It awaits queries via POST method. Thank you for using!',
+      data: []
+    });
+  });
 };
